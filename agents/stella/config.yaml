@@ -1,7 +1,3 @@
-vars:
-  step_count: &step_count 2000
-  time_limit: &time_limit 57600  # 16 hours
-
 stella:
   start: stella/start.sh
   dockerfile: stella/Dockerfile
@@ -21,9 +17,3 @@ stella:
     ANTHROPIC_API_KEY: ${{ env.ANTHROPIC_API_KEY }}
     MEM0_API_KEY: ${{ env.MEM0_API_KEY }}
     GEMINI_API_KEY: ${{ env.GEMINI_API_KEY }}
-    http_proxy: ${{ env.http_proxy }}
-    https_proxy: ${{ env.https_proxy }}
-    HTTP_PROXY: ${{ env.HTTP_PROXY }}
-    HTTPS_PROXY: ${{ env.HTTPS_PROXY }}
-    no_proxy: ${{ env.no_proxy }}
-    NO_PROXY: ${{ env.NO_PROXY }} 
