@@ -24,3 +24,9 @@ aide:
   env_vars:
     <<: *env_vars
     OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    http_proxy: ${{ env.http_proxy }}
+    https_proxy: ${{ env.https_proxy }}
+    HTTP_PROXY: ${{ env.HTTP_PROXY }}
+    HTTPS_PROXY: ${{ env.HTTPS_PROXY }}
+    no_proxy: ${{ env.no_proxy }}
+    NO_PROXY: ${{ env.NO_PROXY }}
