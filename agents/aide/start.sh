@@ -65,6 +65,25 @@ cat /home/data/description.md >> ${AGENT_DIR}/full_instructions.txt
 mkdir -p ${AGENT_DIR}/logs
 mkdir -p ${AGENT_DIR}/workspaces
 
+# Ensure OpenRouter model IDs with openai prefixes route through the OpenAI backend
+PATCH_DIR="${AGENT_DIR}/patches"
+mkdir -p "${PATCH_DIR}"
+cat <<'PY' > "${PATCH_DIR}/sitecustomize.py"
+from aide import backend as _backend
+
+_original_determine_provider = _backend.determine_provider
+
+
+def _patched_determine_provider(model: str) -> str:
+    if model.startswith(("openai/", "gpt-", "o1-")):
+        return "openai"
+    return _original_determine_provider(model)
+
+
+_backend.determine_provider = _patched_determine_provider
+PY
+export PYTHONPATH="${PATCH_DIR}:${PYTHONPATH:-}"
+
 # Create a goal description from the task description
 GOAL="Build a machine learning model to solve this biomedical task. Focus on understanding the dataset structure, implementing appropriate data preprocessing, selecting suitable algorithms for the task type, and optimizing performance. Full instructions can be found in the instructions.txt file."
 
