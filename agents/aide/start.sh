@@ -65,6 +65,17 @@ cat /home/data/description.md >> ${AGENT_DIR}/full_instructions.txt
 mkdir -p ${AGENT_DIR}/logs
 mkdir -p ${AGENT_DIR}/workspaces
 
+# Disable function-calling review when the backend does not support it (e.g., OpenRouter).
+PATCH_DIR="${AGENT_DIR}/patches"
+mkdir -p "${PATCH_DIR}"
+cat <<'PY' > "${PATCH_DIR}/sitecustomize.py"
+import aide.agent
+
+# OpenRouter backend currently lacks function-calling support; fall back to text-only responses.
+aide.agent.review_func_spec = None
+PY
+export PYTHONPATH="${PATCH_DIR}:${PYTHONPATH:-}"
+
 # Create a goal description from the task description
 GOAL="Build a machine learning model to solve this biomedical task. Focus on understanding the dataset structure, implementing appropriate data preprocessing, selecting suitable algorithms for the task type, and optimizing performance. Full instructions can be found in the instructions.txt file."
 
