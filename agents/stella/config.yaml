@@ -7,19 +7,20 @@ stella:
   dockerfile: stella/Dockerfile
   kwargs_type: argparse
   kwargs:
-    model: claude-sonnet-4
+    model: ${{ env.OPENROUTER_MODEL }}
     max_tools: 60
     timeout_seconds: 3600
     # Note: use_templates and use_mem0 are action="store_true" flags
     # Only include them in kwargs if you want them to be True
     # For benchmarking (zero-shot), we want both False, so we omit them
   env_vars:
-    TIME_LIMIT_SECS: *time_limit
-    STEP_LIMIT: *step_count
-    OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-    ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-    MEM0_API_KEY: ${{ secrets.MEM0_API_KEY }}
-    GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+    TIME_LIMIT_SECS: ${{ env.BMLB_TIME_LIMIT_SECS }}
+    STEP_LIMIT: ${{ env.BMLB_STEP_LIMIT }}
+    OPENROUTER_API_KEY: ${{ env.OPENROUTER_API_KEY }}
+    OPENROUTER_BASE_URL: ${{ env.OPENROUTER_BASE_URL }}
+    ANTHROPIC_API_KEY: ${{ env.ANTHROPIC_API_KEY }}
+    MEM0_API_KEY: ${{ env.MEM0_API_KEY }}
+    GEMINI_API_KEY: ${{ env.GEMINI_API_KEY }}
     http_proxy: ${{ env.http_proxy }}
     https_proxy: ${{ env.https_proxy }}
     HTTP_PROXY: ${{ env.HTTP_PROXY }}
