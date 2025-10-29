@@ -17,3 +17,7 @@ stella:
     ANTHROPIC_API_KEY: ${{ env.ANTHROPIC_API_KEY }}
     MEM0_API_KEY: ${{ env.MEM0_API_KEY }}
     GEMINI_API_KEY: ${{ env.GEMINI_API_KEY }}
+    http_proxy: ${{ env.http_proxy }}
+    https_proxy: ${{ env.https_proxy }}
+    HTTP_PROXY: ${{ env.HTTP_PROXY }}
+    HTTPS_PROXY: ${{ env.HTTPS_PROXY }}

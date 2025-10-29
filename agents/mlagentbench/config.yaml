@@ -15,3 +15,7 @@ mlagentbench:
     OPENAI_BASE_URL: ${{ env.OPENROUTER_BASE_URL }}
     TIME_LIMIT_SECS: ${{ env.BMLB_TIME_LIMIT_SECS }}
     STEP_LIMIT: ${{ env.BMLB_STEP_LIMIT }}
+    http_proxy: ${{ env.http_proxy }}
+    https_proxy: ${{ env.https_proxy }}
+    HTTP_PROXY: ${{ env.HTTP_PROXY }}
+    HTTPS_PROXY: ${{ env.HTTPS_PROXY }}
