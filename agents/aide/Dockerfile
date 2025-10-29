@@ -24,6 +24,14 @@ ENV https_proxy=${https_proxy}
 
 RUN mkdir -p ${LOGS_DIR} ${CODE_DIR} ${AGENT_DIR}
 
+# Configure apt to respect proxy settings when present
+RUN if [ -n "$http_proxy" ]; then \
+        echo "Acquire::http::Proxy \"$http_proxy\";" > /etc/apt/apt.conf.d/99proxy; \
+    fi && \
+    if [ -n "$https_proxy" ]; then \
+        echo "Acquire::https::Proxy \"$https_proxy\";" >> /etc/apt/apt.conf.d/99proxy; \
+    fi
+
 ARG CONDA_ENV_NAME=agent
 ARG REQUIREMENTS=${AGENT_DIR}/requirements.txt
 

@@ -24,6 +24,13 @@ ENV https_proxy=${https_proxy}
 
 RUN mkdir -p ${LOGS_DIR} ${CODE_DIR} ${AGENT_DIR}
 
+RUN if [ -n "$http_proxy" ]; then \
+        echo "Acquire::http::Proxy \"$http_proxy\";" > /etc/apt/apt.conf.d/99proxy; \
+    fi && \
+    if [ -n "$https_proxy" ]; then \
+        echo "Acquire::https::Proxy \"$https_proxy\";" >> /etc/apt/apt.conf.d/99proxy; \
+    fi
+
 ARG CONDA_ENV_NAME=agent
 
 # copy just the requirements file, so that we can cache conda separately from the agent files
