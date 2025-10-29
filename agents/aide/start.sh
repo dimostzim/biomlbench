@@ -65,6 +65,91 @@ cat /home/data/description.md >> ${AGENT_DIR}/full_instructions.txt
 mkdir -p ${AGENT_DIR}/logs
 mkdir -p ${AGENT_DIR}/workspaces
 
+# Inject runtime patch so AIDE's OpenRouter backend supports function calling
+PATCH_DIR="${AGENT_DIR}/patches"
+mkdir -p "${PATCH_DIR}"
+cat <<'PY' > "${PATCH_DIR}/sitecustomize.py"
+import json
+import time
+
+from funcy import notnone, select_values
+
+from aide.backend import backend_openrouter
+from aide.backend.utils import backoff_create
+
+
+def _patched_query(
+    system_message: str | None,
+    user_message: str | None,
+    func_spec=None,
+    convert_system_to_user: bool = False,
+    **model_kwargs,
+):
+    backend_openrouter._setup_openrouter_client()
+    filtered_kwargs = select_values(notnone, model_kwargs)  # type: ignore
+
+    messages = []
+    if system_message:
+        if convert_system_to_user:
+            messages.append({"role": "user", "content": system_message})
+        else:
+            messages.append({"role": "system", "content": system_message})
+    if user_message:
+        messages.append({"role": "user", "content": user_message})
+
+    if func_spec is not None:
+        filtered_kwargs["tools"] = [func_spec.as_openai_tool_dict]
+        filtered_kwargs["tool_choice"] = func_spec.openai_tool_choice_dict
+
+    client = backend_openrouter._client
+    if client is None:
+        raise RuntimeError("OpenRouter client not initialised")
+
+    t0 = time.time()
+    completion = backoff_create(
+        client.chat.completions.create,
+        backend_openrouter.OPENAI_TIMEOUT_EXCEPTIONS,
+        messages=messages,
+        extra_body={
+            "provider": {
+                "order": ["Fireworks"],
+                "ignore": ["Together", "DeepInfra", "Hyperbolic"],
+            },
+        },
+        **filtered_kwargs,
+    )
+    req_time = time.time() - t0
+
+    choice = completion.choices[0]
+    if func_spec is None:
+        output = choice.message.content
+    else:
+        tool_calls = getattr(choice.message, "tool_calls", None)
+        if not tool_calls:
+            raise RuntimeError("Function call requested but tool_calls missing in response")
+        func_call = tool_calls[0].function
+        if func_call.name != func_spec.name:
+            raise RuntimeError(
+                f"Function name mismatch: expected {func_spec.name}, got {func_call.name}"
+            )
+        output = json.loads(func_call.arguments)
+
+    in_tokens = completion.usage.prompt_tokens
+    out_tokens = completion.usage.completion_tokens
+
+    info = {
+        "system_fingerprint": completion.system_fingerprint,
+        "model": completion.model,
+        "created": completion.created,
+    }
+
+    return output, req_time, in_tokens, out_tokens, info
+
+
+backend_openrouter.query = _patched_query
+PY
+export PYTHONPATH="${PATCH_DIR}:${PYTHONPATH:-}"
+
 # Create a goal description from the task description
 GOAL="Build a machine learning model to solve this biomedical task. Focus on understanding the dataset structure, implementing appropriate data preprocessing, selecting suitable algorithms for the task type, and optimizing performance. Full instructions can be found in the instructions.txt file."
 
