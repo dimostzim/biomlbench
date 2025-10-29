@@ -44,20 +44,6 @@ fi
 # start a new file to store the full instructions, starting with general instructions
 cp /home/instructions.txt ${AGENT_DIR}/full_instructions.txt
 
-# Surface key environment variables to help diagnose connectivity issues
-echo "=== Environment: proxy variables ==="
-env | grep -i proxy || echo "(none found)"
-echo "=== Environment: OpenAI/OpenRouter variables ==="
-env | grep -E 'OPENAI|OPENROUTER' || echo "(none found)"
-echo "=== Connectivity check: openrouter models endpoint ==="
-curl -sS -o /tmp/openrouter_ping.json -w "HTTP %{http_code}\n" \
-  -H "Authorization: Bearer ${OPENAI_API_KEY}" \
-  -H "HTTP-Referer: biomlbench" \
-  "${OPENAI_BASE_URL%/}/models" || echo "(curl failed)"
-if [ -s /tmp/openrouter_ping.json ]; then
-  head -c 200 /tmp/openrouter_ping.json && echo ""
-fi
-
 # add agent-specific instructions with a linebreak in between
 echo "" >> ${AGENT_DIR}/full_instructions.txt
 envsubst < ${AGENT_DIR}/additional_notes.txt >> ${AGENT_DIR}/full_instructions.txt

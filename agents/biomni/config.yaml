@@ -1,7 +1,3 @@
-vars:
-  step_count: &step_count 2000
-  time_limit: &time_limit 43200 # total time limit
-
 biomni:
   start: biomni/start.sh
   dockerfile: biomni/Dockerfile
@@ -18,9 +14,3 @@ biomni:
     BIOMNI_LLM_MODEL: ${{ env.BIOMNI_LLM_MODEL }}
     BIOMNI_CUSTOM_BASE_URL: ${{ env.BIOMNI_CUSTOM_BASE_URL }}
     BIOMNI_CUSTOM_API_KEY: ${{ env.BIOMNI_CUSTOM_API_KEY }}
-    http_proxy: ${{ env.http_proxy }}
-    https_proxy: ${{ env.https_proxy }}
-    HTTP_PROXY: ${{ env.HTTP_PROXY }}
-    HTTPS_PROXY: ${{ env.HTTPS_PROXY }}
-    no_proxy: ${{ env.no_proxy }}
-    NO_PROXY: ${{ env.NO_PROXY }}
