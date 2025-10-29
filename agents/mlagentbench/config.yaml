@@ -1,3 +1,7 @@
+vars:
+  time_limit: &time_limit 43200 
+  step_count: &step_count 2000
+
 mlagentbench:
   start: mlagentbench/start.sh
   dockerfile: mlagentbench/Dockerfile
