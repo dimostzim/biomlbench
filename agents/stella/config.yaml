@@ -21,3 +21,5 @@ stella:
     https_proxy: ${{ env.https_proxy }}
     HTTP_PROXY: ${{ env.HTTP_PROXY }}
     HTTPS_PROXY: ${{ env.HTTPS_PROXY }}
+    no_proxy: ${{ env.no_proxy }}
+    NO_PROXY: ${{ env.NO_PROXY }}
