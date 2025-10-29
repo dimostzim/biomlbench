@@ -1,4 +1,5 @@
 import logging
+import os
 import time
 from pathlib import Path
 
@@ -16,6 +17,36 @@ from environment.utils import (
 )
 
 CONSTANTS = dotenv_values(Path(__file__).parent.resolve() / ".shared_env")
+
+PROXY_ENV_PAIRS = [
+    ("HTTP_PROXY", "http_proxy"),
+    ("HTTPS_PROXY", "https_proxy"),
+    ("NO_PROXY", "no_proxy"),
+    ("ALL_PROXY", "all_proxy"),
+]
+
+
+def collect_proxy_env() -> dict[str, str]:
+    """
+    Collect proxy-related environment variables from the host and mirror both
+    upper- and lower-case variants for compatibility inside the container.
+    """
+    proxies: dict[str, str] = {}
+    for upper, lower in PROXY_ENV_PAIRS:
+        upper_val = os.environ.get(upper)
+        lower_val = os.environ.get(lower)
+
+        if upper_val:
+            proxies[upper] = upper_val
+        if lower_val:
+            proxies[lower] = lower_val
+
+        if upper_val and lower not in proxies:
+            proxies[lower] = upper_val
+        if lower_val and upper not in proxies:
+            proxies[upper] = lower_val
+
+    return proxies
 
 
 def save_output(container: Container, save_dir: Path, container_config: dict) -> Path:
@@ -125,15 +156,18 @@ def run_in_container(
         },
     }
 
+    container_env = {
+        "TASK_ID": task_id,
+        **agent.env_vars,
+    }
+    container_env.update(collect_proxy_env())
+
     container = create_task_container(
         client=client,
         task_id=task_id,
         container_config=container_config,
         volumes_config=volumes_config,
-        env_vars={
-            "TASK_ID": task_id,
-            **agent.env_vars,
-        },
+        env_vars=container_env,
         container_image=image,
         privileged=agent.privileged,
     )
