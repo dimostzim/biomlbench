@@ -46,6 +46,18 @@ def collect_proxy_env() -> dict[str, str]:
         if lower_val and upper not in proxies:
             proxies[upper] = lower_val
 
+    # Ensure localhost endpoints bypass proxies so internal health checks work.
+    local_targets = {"localhost", "127.0.0.1"}
+    no_proxy = proxies.get("NO_PROXY") or proxies.get("no_proxy")
+    if no_proxy:
+        entries = {entry.strip() for entry in no_proxy.split(",") if entry.strip()}
+        entries.update(local_targets)
+        merged = ",".join(sorted(entries))
+    else:
+        merged = ",".join(sorted(local_targets))
+    proxies["NO_PROXY"] = merged
+    proxies["no_proxy"] = merged
+
     return proxies
 
 
