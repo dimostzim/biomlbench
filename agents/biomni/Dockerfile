@@ -24,6 +24,13 @@ ENV https_proxy=${https_proxy}
 
 RUN mkdir -p ${LOGS_DIR} ${CODE_DIR} ${AGENT_DIR}
 
+RUN if [ -n "$http_proxy" ]; then \
+        echo "Acquire::http::Proxy \"$http_proxy\";" > /etc/apt/apt.conf.d/99proxy; \
+    fi && \
+    if [ -n "$https_proxy" ]; then \
+        echo "Acquire::https::Proxy \"$https_proxy\";" >> /etc/apt/apt.conf.d/99proxy; \
+    fi
+
 ARG CONDA_ENV_NAME=agent
 
 # Accept Anaconda TOS for defaults channels (needed for non-interactive builds)
@@ -58,4 +65,3 @@ RUN conda run -n biomni_e1 pip install "numpy<2.0" --force-reinstall && \
     echo "✅ NumPy downgraded for RDKit compatibility"
 
 COPY . ${AGENT_DIR}
-
