@@ -5,12 +5,12 @@ from typing import Optional
 
 
 def get_env_var(value: str) -> Optional[str]:
-    """Returns the name of the environment variable in the format `${secrets.<name>}`."""
+    """Returns the environment variable name referenced by `${{ secrets.NAME }}` or `${{ env.NAME }}`."""
 
     if not isinstance(value, str):
         return None
 
-    env_var_pattern = r"\$\{\{\s*secrets\.(\w+)\s*\}\}"
+    env_var_pattern = r"\$\{\{\s*(?:secrets|env)\.(\w+)\s*\}\}"
     match = re.match(env_var_pattern, value)
 
     if not match:
@@ -20,8 +20,6 @@ def get_env_var(value: str) -> Optional[str]:
 
 
 def is_env_var(value: str) -> bool:
-    """Checks if the value is an environment variable."""
-
     return get_env_var(value) is not None
 
 
@@ -64,25 +62,15 @@ def parse_env_var_values(dictionary: dict) -> dict:
             continue
 
         env_var = get_env_var(value)
-        
+
         if env_var is None:
-            continue  # Skip if not a valid env var pattern
+            continue
 
-        if os.getenv(env_var) is None:
-            # Provide helpful error message with suggestions
-            error_msg = f"Environment variable `{env_var}` is not set!"
-            
-            # Add specific suggestions based on the variable name
-            if env_var.endswith("_API_KEY"):
-                error_msg += f"\n\nTo fix this:"
-                error_msg += f"\n1. Create a .env file in your project root directory"
-                error_msg += f"\n2. Add the following line to your .env file:"
-                error_msg += f"\n   {env_var}=your-actual-api-key-here"
-                error_msg += f"\n3. Or export the variable in your shell:"
-                error_msg += f"\n   export {env_var}=your-actual-api-key-here"
-            
-            raise ValueError(error_msg)
+        env_value = os.getenv(env_var)
 
-        dictionary[key] = os.getenv(env_var)
+        if env_value is None:
+            raise ValueError(f"Environment variable `{env_var}` is not set")
+
+        dictionary[key] = env_value
 
     return dictionary
