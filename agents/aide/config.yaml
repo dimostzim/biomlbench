@@ -18,12 +18,12 @@ aide:
   <<: *defaults
   kwargs:
     <<: *kwargs_common
-    agent.code.model: gpt-4.1-2025-04-14
-    agent.feedback.model: gpt-4.1-2025-04-14
-    agent.steps: *step_count
+    agent.code.model: ${{ env.OPENROUTER_MODEL }}
+    agent.feedback.model: ${{ env.OPENROUTER_MODEL }}
   env_vars:
     <<: *env_vars
-    OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    OPENAI_API_KEY: ${{ env.OPENROUTER_API_KEY }}
+    OPENAI_BASE_URL: ${{ env.OPENROUTER_BASE_URL }}
     http_proxy: ${{ env.http_proxy }}
     https_proxy: ${{ env.https_proxy }}
     HTTP_PROXY: ${{ env.HTTP_PROXY }}

@@ -7,12 +7,17 @@ biomni:
   dockerfile: biomni/Dockerfile
   kwargs_type: argparse
   kwargs:
-    llm: claude-sonnet-4-20250514
-    timeout_seconds: 3600
+    llm: ${{ env.OPENROUTER_MODEL }}
+    timeout_seconds: ${{ env.BIOMNI_TIMEOUT_SECONDS }}
   env_vars:
-    TIME_LIMIT_SECS: *time_limit
-    STEP_LIMIT: *step_count
-    ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    TIME_LIMIT_SECS: ${{ env.BMLB_TIME_LIMIT_SECS }}
+    STEP_LIMIT: ${{ env.BMLB_STEP_LIMIT }}
+    OPENROUTER_API_KEY: ${{ env.OPENROUTER_API_KEY }}
+    OPENROUTER_BASE_URL: ${{ env.OPENROUTER_BASE_URL }}
+    BIOMNI_SOURCE: ${{ env.BIOMNI_SOURCE }}
+    BIOMNI_LLM_MODEL: ${{ env.BIOMNI_LLM_MODEL }}
+    BIOMNI_CUSTOM_BASE_URL: ${{ env.BIOMNI_CUSTOM_BASE_URL }}
+    BIOMNI_CUSTOM_API_KEY: ${{ env.BIOMNI_CUSTOM_API_KEY }}
     http_proxy: ${{ env.http_proxy }}
     https_proxy: ${{ env.https_proxy }}
     HTTP_PROXY: ${{ env.HTTP_PROXY }}
