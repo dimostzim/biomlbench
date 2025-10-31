@@ -121,6 +121,8 @@ if [[ -f "../config.yaml" ]]; then
     export BMLB_TIME_LIMIT_SECS=$(python -c "import yaml; print(yaml.safe_load(open('../config.yaml'))['time_limit_secs'])")
     export BMLB_STEP_LIMIT=$(python -c "import yaml; print(yaml.safe_load(open('../config.yaml'))['step_limit'])")
     export OPENROUTER_MODEL=$(python -c "import yaml; print(yaml.safe_load(open('../config.yaml'))['model'])")
+    export OPENROUTER_API_KEY=$(python -c "import yaml; print(yaml.safe_load(open('../config.yaml'))['openrouter_key'])")
+    export OPENROUTER_BASE_URL=$(python -c "import yaml; print(yaml.safe_load(open('../config.yaml'))['openrouter_base_url'])")
 fi
 if python -c "from agents.registry import registry; agent = registry.get_agent('$AGENT_ID'); print(f'Agent {agent.id} loaded successfully')"; then
     echo -e "${GREEN}✅ Agent configuration is valid${NC}"
