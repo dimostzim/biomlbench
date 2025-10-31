@@ -116,6 +116,11 @@ done
 
 # Check if the agent is properly configured
 echo "Validating agent configuration..."
+# Load config values from competitors config if available
+if [[ -f "../../config.yaml" ]]; then
+    export BMLB_TIME_LIMIT_SECS=$(python -c "import yaml; print(yaml.safe_load(open('../../config.yaml'))['time_limit_secs'])")
+    export BMLB_STEP_LIMIT=$(python -c "import yaml; print(yaml.safe_load(open('../../config.yaml'))['step_limit'])")
+fi
 if python -c "from agents.registry import registry; agent = registry.get_agent('$AGENT_ID'); print(f'Agent {agent.id} loaded successfully')"; then
     echo -e "${GREEN}✅ Agent configuration is valid${NC}"
 else
