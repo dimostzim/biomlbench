@@ -28,7 +28,7 @@ COPY requirements.txt ${AGENT_DIR}/requirements.txt
 
 # create conda environment and install the requirements to it
 RUN echo "Installing requirements"
-RUN conda run -n ${CONDA_ENV_NAME} pip install git+https://github.com/AIxBio/aideml_bmlb.git
+RUN conda run -n ${CONDA_ENV_NAME} pip install git+https://github.com/dimostzim/aideml_bmlb.git
 RUN conda run -n ${CONDA_ENV_NAME} pip install "httpx<0.28" --force-reinstall
 
 # put all the agent files in the expected location
