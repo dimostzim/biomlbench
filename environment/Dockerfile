@@ -3,6 +3,16 @@ FROM ubuntu:22.04
 # Avoid interactive dialog from apt-get and other packages requiring configuration
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Configure proxy for apt (will use build args if provided)
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+ARG http_proxy
+ARG https_proxy
+ENV http_proxy=${http_proxy}
+ENV https_proxy=${https_proxy}
+ENV HTTP_PROXY=${HTTP_PROXY}
+ENV HTTPS_PROXY=${HTTPS_PROXY}
+
 # install basic packages with updated versions
 RUN apt-get update && apt-get install -y \
     curl \

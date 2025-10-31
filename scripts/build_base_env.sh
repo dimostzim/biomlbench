@@ -47,7 +47,22 @@ echo "This may take several minutes as it installs biomedical dependencies."
 echo ""
 
 # Build the Docker image (from root directory with environment/Dockerfile)
-if docker build --platform=linux/amd64 -t biomlbench-env -f environment/Dockerfile .; then
+# Pass proxy settings as build args if they exist
+BUILD_ARGS=""
+if [ -n "$HTTP_PROXY" ]; then
+    BUILD_ARGS="$BUILD_ARGS --build-arg HTTP_PROXY=$HTTP_PROXY"
+fi
+if [ -n "$HTTPS_PROXY" ]; then
+    BUILD_ARGS="$BUILD_ARGS --build-arg HTTPS_PROXY=$HTTPS_PROXY"
+fi
+if [ -n "$http_proxy" ]; then
+    BUILD_ARGS="$BUILD_ARGS --build-arg http_proxy=$http_proxy"
+fi
+if [ -n "$https_proxy" ]; then
+    BUILD_ARGS="$BUILD_ARGS --build-arg https_proxy=$https_proxy"
+fi
+
+if docker build --platform=linux/amd64 -t biomlbench-env -f environment/Dockerfile $BUILD_ARGS .; then
     echo ""
     echo -e "${GREEN}✅ Successfully built biomlbench-env image${NC}"
 else
