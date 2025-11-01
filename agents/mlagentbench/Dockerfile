@@ -29,8 +29,10 @@ RUN conda run -n ${CONDA_ENV_NAME} pip install --upgrade pip && \
     conda run -n ${CONDA_ENV_NAME} pip install --upgrade "openai>=1.50.0" && \
     conda clean -afy
 
-# Clone MLAgentBench repository
-RUN git clone https://github.com/snap-stanford/MLAgentBench.git ${AGENT_DIR}/MLAgentBench
+# Clone MLAgentBench repository (fork includes OpenRouter integration fixes)
+ARG MLAGENTBENCH_REPO=https://github.com/dimostzim/MLAgentBench.git
+ARG MLAGENTBENCH_BRANCH=main
+RUN git clone --branch ${MLAGENTBENCH_BRANCH} ${MLAGENTBENCH_REPO} ${AGENT_DIR}/MLAgentBench
 
 # Copy benchmark directory
 COPY ./benchmark_dir ${AGENT_DIR}/MLAgentBench/MLAgentBench/benchmarks/biomlbench
