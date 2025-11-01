@@ -4,7 +4,6 @@ biomni:
   kwargs_type: argparse
   kwargs:
     llm: ${{ env.OPENROUTER_MODEL }}
-    timeout_seconds: ${{ env.BIOMNI_TIMEOUT_SECONDS }}
   env_vars:
     TIME_LIMIT_SECS: ${{ env.BMLB_TIME_LIMIT_SECS }}
     STEP_LIMIT: ${{ env.BMLB_STEP_LIMIT }}
