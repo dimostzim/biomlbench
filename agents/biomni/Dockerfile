@@ -33,16 +33,17 @@ RUN git clone https://github.com/snap-stanford/Biomni.git ${AGENT_DIR}/Biomni &&
 
 RUN conda run -n biomni_e1 pip install ${AGENT_DIR}/Biomni
 
-COPY pre_download_data.py ${AGENT_DIR}/pre_download_data.py
-
-RUN echo "🚀 Starting Biomni data lake pre-download..." && \
-    echo "�� This will download ~80+ biomedical datasets (~20 GB total)" && \
-    echo "⏱️  This step takes around an hour..." && \
-    conda run -n biomni_e1 python ${AGENT_DIR}/pre_download_data.py && \
-    mkdir -p ${AGENT_DIR}/biomni_data && \
-    cp -r /tmp/biomni_data/* ${AGENT_DIR}/biomni_data/ && \
-    rm -rf /tmp/biomni_data && \
-    echo "✅ Data lake pre-download completed successfully!"
+# Skip data lake pre-download for Agentomics datasets (saves ~20GB and 1 hour build time)
+# Uncomment below if you need BioMNI's built-in biomedical data lake
+# COPY pre_download_data.py ${AGENT_DIR}/pre_download_data.py
+# RUN echo "🚀 Starting Biomni data lake pre-download..." && \
+#     echo "�� This will download ~80+ biomedical datasets (~20 GB total)" && \
+#     echo "⏱️  This step takes around an hour..." && \
+#     conda run -n biomni_e1 python ${AGENT_DIR}/pre_download_data.py && \
+#     mkdir -p ${AGENT_DIR}/biomni_data && \
+#     cp -r /tmp/biomni_data/* ${AGENT_DIR}/biomni_data/ && \
+#     rm -rf /tmp/biomni_data && \
+#     echo "✅ Data lake pre-download completed successfully!"
 
 # Fix NumPy version compatibility with RDKit AFTER data lake download
 RUN conda run -n biomni_e1 pip install "numpy<2.0" --force-reinstall && \
