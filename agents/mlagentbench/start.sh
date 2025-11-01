@@ -66,8 +66,10 @@ logdir="$AGENT_DIR/logs" && mkdir -p $logdir
 ln -s $SUBMISSION_DIR $mlab_env_dir/submission
 # Agent will generate a bunch of files under $logdir, we only want $logdir/agent_log so we link that to $LOGS_DIR which is what gets exported
 ln -s $LOGS_DIR $logdir/agent_log
-# DATA_DIR is a mounted volume prepared with the data, agent will interact with it at $mlab_env_dir/data
-ln -s $DATA_DIR $mlab_env_dir/data
+# Copy data into the workspace so downstream tools can actually read it
+rm -rf "$mlab_env_dir/data"
+mkdir -p "$mlab_env_dir/data"
+cp -a "$DATA_DIR/." "$mlab_env_dir/data/"
 # Populate research_problem.txt with the updated instructions.txt, this is given to the agent via a prompt
 cp $INSTRUCTIONS_FILE $AGENT_DIR/MLAgentBench/MLAgentBench/benchmarks/$task/scripts/research_problem.txt
 # Agent will receive instructions via the `research_problem.txt` prompt, but we also make a copy available to the agent
