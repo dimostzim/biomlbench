@@ -38,17 +38,33 @@ def main():
     cwd = Path(__file__).parent
     agent_path = args.path if args.path else str(cwd)
 
+    # Get LLM configuration from environment variables
+    llm_source = os.getenv("LLM_SOURCE")
+    base_url = os.getenv("CUSTOM_MODEL_BASE_URL")
+    api_key = os.getenv("CUSTOM_MODEL_API_KEY", "EMPTY")
+
     print(f"Using LLM: {args.llm}")
     print(f"Using path: {agent_path}")
     print(f"Timeout: {args.timeout_seconds} seconds")
+    if llm_source:
+        print(f"LLM Source: {llm_source}")
+    if base_url:
+        print(f"Base URL: {base_url}")
 
     # Read task description
     task_description_path = "/home/data/description.md"
     with open(task_description_path, 'r') as f:
         task_description = f.read()
 
-    # Initialize the agent with data path
-    agent = A1(path=agent_path, llm=args.llm, timeout_seconds=args.timeout_seconds)
+    # Initialize the agent with data path and LLM configuration
+    agent = A1(
+        path=agent_path,
+        llm=args.llm,
+        timeout_seconds=args.timeout_seconds,
+        source=llm_source,
+        base_url=base_url,
+        api_key=api_key
+    )
 
     prompt = f"""
     Build a machine learning model to solve this biomedical task. Focus on understanding the dataset structure, 

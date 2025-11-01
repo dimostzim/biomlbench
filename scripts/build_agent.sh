@@ -124,10 +124,9 @@ if [[ -f "../config.yaml" ]]; then
     export OPENROUTER_API_KEY=$(python -c "import yaml; print(yaml.safe_load(open('../config.yaml'))['openrouter_key'])")
     export OPENROUTER_BASE_URL=$(python -c "import yaml; print(yaml.safe_load(open('../config.yaml'))['openrouter_base_url'])")
     # Set BIOMNI-specific env vars for validation
-    export BIOMNI_SOURCE="Custom"
-    export BIOMNI_CUSTOM_BASE_URL=$OPENROUTER_BASE_URL
-    export BIOMNI_CUSTOM_API_KEY=$OPENROUTER_API_KEY
-    export BIOMNI_LLM_MODEL=$OPENROUTER_MODEL
+    export LLM_SOURCE="Custom"
+    export CUSTOM_MODEL_BASE_URL=$OPENROUTER_BASE_URL
+    export CUSTOM_MODEL_API_KEY=$OPENROUTER_API_KEY
 fi
 if python -c "from agents.registry import registry; agent = registry.get_agent('$AGENT_ID'); print(f'Agent {agent.id} loaded successfully')"; then
     echo -e "${GREEN}✅ Agent configuration is valid${NC}"
