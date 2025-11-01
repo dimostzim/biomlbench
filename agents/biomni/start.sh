@@ -63,12 +63,12 @@ cat /home/data/description.md >> ${AGENT_DIR}/instructions.txt
 mkdir -p ${AGENT_DIR}/logs
 mkdir -p ${AGENT_DIR}/workspaces
 
-# Verify that data lake files are present
-echo "Verifying pre-downloaded data lake files..."
-python ${AGENT_DIR}/verify_data_download.py
-if [ $? -ne 0 ]; then
-    echo "Warning: Some data lake files may be missing. Biomni will download them at runtime."
-fi
+# Skip data lake verification (not needed for Agentomics datasets)
+# echo "Verifying pre-downloaded data lake files..."
+# python ${AGENT_DIR}/verify_data_download.py
+# if [ $? -ne 0 ]; then
+#     echo "Warning: Some data lake files may be missing. Biomni will download them at runtime."
+# fi
 
 # Fix RDKit compatibility if needed
 echo "Checking RDKit compatibility..."
