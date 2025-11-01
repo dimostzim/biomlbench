@@ -65,7 +65,7 @@ networkx
 
 
 #others
-cchardet
+faust-cchardet==2.1.19
 pytest
 dacite
 tenacity
