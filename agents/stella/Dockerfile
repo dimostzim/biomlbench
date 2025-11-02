@@ -23,8 +23,5 @@ COPY requirements.txt ${AGENT_DIR}/requirements.txt
 # Install STELLA dependencies
 RUN /opt/conda/bin/conda run -n agent pip install -r ${AGENT_DIR}/requirements.txt
 
-# put all the agent files in the expected location
+# put all the agent files in the expected location (includes ref/STELLA)
 COPY . ${AGENT_DIR}
-
-# Preserve legacy STELLA path expected by upstream scripts
-RUN mkdir -p /home/agent/ref/STELLA && cp -r ${AGENT_DIR}/ref/STELLA/. /home/agent/ref/STELLA/
