@@ -43,3 +43,5 @@ aide_journals
 figuresv2
 analysis_resultsv2
 *.log.*
+!agents/stella/ref/
+!agents/stella/ref/**

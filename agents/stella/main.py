@@ -2,12 +2,24 @@
 Simple BioMLBench interface for STELLA
 """
 import argparse
+import inspect
 import os
 import sys
 from pathlib import Path
 
-# Add STELLA to Python path
-sys.path.insert(0, "/home/agent/ref/STELLA")
+
+def _register_stella_path() -> None:
+    """Ensure the bundled STELLA sources are importable."""
+    stella_candidates = [
+        Path(__file__).resolve().parent / "ref" / "STELLA",
+        Path("/home/agent/ref/STELLA"),
+    ]
+    for candidate in stella_candidates:
+        if candidate.exists():
+            sys.path.insert(0, str(candidate))
+
+
+_register_stella_path()
 
 # Import stella_core module early to initialize all global components
 import stella_core
@@ -24,8 +36,12 @@ def main():
     parser.add_argument("--timeout_seconds", type=int, default=21600)
     
     args = parser.parse_args()
+
+    timeout_seconds = int(os.getenv("TIME_LIMIT_SECS", args.timeout_seconds))
+    max_steps = int(os.getenv("STEP_LIMIT", args.max_tools))
     
     print(f"Initializing STELLA with model: {args.model}")
+    print(f"Configured runtime limits → timeout: {timeout_seconds}s, max steps: {max_steps}")
     
     # Verify all core components exist after stella_core import
     print(f"🤖 Dev agent: {type(stella_core.dev_agent).__name__ if stella_core.dev_agent else 'Missing'}")
@@ -68,7 +84,21 @@ Save your final predictions to /home/submission/submission.csv (or appropriate f
 """
     
     print("Running STELLA on biomedical task...")
-    result = manager_agent.run(prompt)
+    run_parameters = {}
+    run_signature = inspect.signature(manager_agent.run)
+    if "max_steps" in run_signature.parameters:
+        run_parameters["max_steps"] = max_steps
+    if "timeout" in run_signature.parameters:
+        run_parameters["timeout"] = timeout_seconds
+
+    if hasattr(manager_agent, "max_steps"):
+        manager_agent.max_steps = max_steps
+    if hasattr(manager_agent, "max_iterations"):
+        manager_agent.max_iterations = max_steps
+    if hasattr(manager_agent, "timeout"):
+        manager_agent.timeout = timeout_seconds
+
+    result = manager_agent.run(prompt, **run_parameters)
     print("STELLA execution completed.")
     
     return result
