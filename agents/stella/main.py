@@ -2,7 +2,6 @@
 Simple BioMLBench interface for STELLA
 """
 import argparse
-import inspect
 import os
 import sys
 from pathlib import Path
@@ -10,13 +9,9 @@ from pathlib import Path
 
 def _register_stella_path() -> None:
     """Ensure the bundled STELLA sources are importable."""
-    stella_candidates = [
-        Path(__file__).resolve().parent / "ref" / "STELLA",
-        Path("/home/agent/ref/STELLA"),
-    ]
-    for candidate in stella_candidates:
-        if candidate.exists():
-            sys.path.insert(0, str(candidate))
+    stella_path = Path(__file__).resolve().parent / "ref" / "STELLA"
+    if stella_path.exists():
+        sys.path.insert(0, str(stella_path))
 
 
 _register_stella_path()
@@ -84,21 +79,8 @@ Save your final predictions to /home/submission/submission.csv (or appropriate f
 """
     
     print("Running STELLA on biomedical task...")
-    run_parameters = {}
-    run_signature = inspect.signature(manager_agent.run)
-    if "max_steps" in run_signature.parameters:
-        run_parameters["max_steps"] = max_steps
-    if "timeout" in run_signature.parameters:
-        run_parameters["timeout"] = timeout_seconds
-
-    if hasattr(manager_agent, "max_steps"):
-        manager_agent.max_steps = max_steps
-    if hasattr(manager_agent, "max_iterations"):
-        manager_agent.max_iterations = max_steps
-    if hasattr(manager_agent, "timeout"):
-        manager_agent.timeout = timeout_seconds
-
-    result = manager_agent.run(prompt, **run_parameters)
+    # Note: timeout_seconds is handled by the shell timeout command in start.sh
+    result = manager_agent.run(prompt, max_steps=max_steps)
     print("STELLA execution completed.")
     
     return result
