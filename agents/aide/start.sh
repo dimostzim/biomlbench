@@ -103,5 +103,11 @@ elif [ -d "${AGENT_DIR}/logs" ]; then
   find ${AGENT_DIR}/logs -name "best_solution.py" -type f -exec cp {} ${CODE_DIR}/ \; -quit
 fi
 
+# Archive the entire workspace so downstream analysis can inspect every file
+if [ -d "${AGENT_DIR}/workspaces" ]; then
+  echo "Archiving AIDE workspace..."
+  tar -czf "${CODE_DIR}/aide_workspace_full.tar.gz" -C "${AGENT_DIR}" workspaces 2>/dev/null || true
+fi
+
 
 echo "AIDE execution complete."

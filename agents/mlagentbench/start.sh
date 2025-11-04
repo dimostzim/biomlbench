@@ -107,3 +107,9 @@ timeout $TIME_LIMIT_SECS python -u -m MLAgentBench.runner \
 # Copy agent code out to $CODE_DIR
 # find all files that are less than 10MB, copy while preserving directory structure
 find "$workdir" -type f -size -10M -exec cp --parents {} "$CODE_DIR" \;
+
+# Archive the entire MLAgentBench workspace for downstream inspection
+if [ -d "$workdir" ]; then
+    echo "Archiving MLAgentBench workspace..."
+    tar -czf "${CODE_DIR}/mlagentbench_workspace_full.tar.gz" -C "$workdir" . 2>/dev/null || true
+fi

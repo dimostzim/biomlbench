@@ -104,4 +104,10 @@ if [ -d "${AGENT_DIR}/workspaces" ]; then
   find ${AGENT_DIR}/workspaces -name "*.py" -type f -exec cp {} ${CODE_DIR}/ \; 2>/dev/null || true
 fi
 
+# Archive the entire workspace for downstream analysis
+if [ -d "${AGENT_DIR}/workspaces" ]; then
+  echo "Archiving Biomni workspace..."
+  tar -czf "${CODE_DIR}/biomni_workspace_full.tar.gz" -C "${AGENT_DIR}" workspaces 2>/dev/null || true
+fi
+
 echo "Biomni execution complete."

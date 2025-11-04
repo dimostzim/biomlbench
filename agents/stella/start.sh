@@ -88,4 +88,14 @@ if [ -d "${AGENT_DIR}/stella/new_tools" ]; then
   find ${AGENT_DIR}/stella/new_tools -name "*.py" -type f -exec cp {} ${CODE_DIR}/ \; 2>/dev/null || true
 fi
 
+# Archive STELLA work directories so the full workspace is preserved
+if [ -d "${AGENT_DIR}/agent_outputs" ]; then
+  echo "Archiving STELLA agent_outputs..."
+  tar -czf "${CODE_DIR}/stella_agent_outputs_full.tar.gz" -C "${AGENT_DIR}" agent_outputs 2>/dev/null || true
+fi
+if [ -d "${AGENT_DIR}/stella" ]; then
+  echo "Archiving STELLA workspace..."
+  tar -czf "${CODE_DIR}/stella_workspace_full.tar.gz" -C "${AGENT_DIR}" stella 2>/dev/null || true
+fi
+
 echo "STELLA execution complete." 
