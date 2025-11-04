@@ -1751,7 +1751,7 @@ all_tools = base_tools + mcp_tools
 dev_agent = ToolCallingAgent(
     tools=all_tools,
     model=gemini_model,
-    max_steps=15,  # Reduced from 20 to improve performance
+    max_steps=int(os.environ["STEP_LIMIT"]),  # Inherit from global config
     name="dev_agent",
     description="""A specialist agent for code execution and environment management.
     It uses tools for complex tasks like creating conda environments or generating scripts from templates.
@@ -1800,7 +1800,7 @@ tool_creation_tools = [
 tool_creation_agent = ToolCallingAgent(
     tools=tool_creation_tools,
     model=claude_model,
-    max_steps=20,  # Reduced from 25
+    max_steps=int(os.environ["STEP_LIMIT"]),  # Inherit from global config
     name="tool_creation_agent",
     description="""A specialized agent for creating new Python tools and utilities.
     
@@ -1849,7 +1849,7 @@ critic_tools = [
 critic_agent = ToolCallingAgent(
     tools=critic_tools,  # ✅ Fixed: Added necessary tools
     model=claude_model,
-    max_steps=5,  # Reduced from 8
+    max_steps=int(os.environ["STEP_LIMIT"]),  # Inherit from global config
     name="critic_agent", 
     description="""Expert critic agent that evaluates task completion quality and determines if specialized tools are needed.
     
