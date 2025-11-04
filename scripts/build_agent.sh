@@ -123,6 +123,8 @@ if [[ -f "../config.yaml" ]]; then
     export OPENROUTER_MODEL=$(python -c "import yaml; print(yaml.safe_load(open('../config.yaml'))['model'])")
     export OPENROUTER_API_KEY=$(python -c "import yaml; print(yaml.safe_load(open('../config.yaml'))['openrouter_key'])")
     export OPENROUTER_BASE_URL=$(python -c "import yaml; print(yaml.safe_load(open('../config.yaml'))['openrouter_base_url'])")
+    export BIOMNI_SELF_CRITIC=$(python -c "import yaml; cfg=yaml.safe_load(open('../config.yaml')); print(str(cfg.get('biomni_self_critic', 'false')).lower())")
+    export BIOMNI_ITERATIONS=$(python -c "import yaml; cfg=yaml.safe_load(open('../config.yaml')); print(cfg.get('biomni_iterations', 0))")
     # Set BIOMNI-specific env vars for validation
     export LLM_SOURCE="Custom"
     export CUSTOM_MODEL_BASE_URL=$OPENROUTER_BASE_URL
