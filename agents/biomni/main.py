@@ -66,6 +66,16 @@ def main():
         api_key=api_key
     )
 
+    # Enable self-critic mode for iterative refinement (if configured)
+    self_critic = os.getenv("BIOMNI_SELF_CRITIC", "false").lower() == "true"
+    iterations = int(os.getenv("BIOMNI_ITERATIONS", "0"))
+
+    if self_critic or iterations > 0:
+        print(f"Enabling BioMNI self-critic mode with {iterations} iteration rounds")
+        agent.configure(self_critic=True, test_time_scale_round=iterations)
+    else:
+        print("Running BioMNI in single-shot mode (self-critic disabled)")
+
     prompt = f"""
     Build a machine learning model to solve this biomedical task. Focus on understanding the dataset structure, 
     implementing appropriate data preprocessing, selecting suitable algorithms for the task type, 
