@@ -7,7 +7,11 @@ BENCHMARK INSTRUCTIONS
 First, please read the instructions below which are specific to our benchmark setup. Note, these instructions can be found again in `/home/instructions.txt`.
 
 - **Task-specific instructions**: The specific instructions for the biomedical task are available in `/home/data/description.md` (will also be in this message). Read this file to understand the problem setup for the task you are currently solving.
-- **Dataset**: The dataset files for the task are available in `/home/data/`. For molecular tasks, you may encounter SMILES strings representing chemical structures. For medical imaging tasks, you may encounter image files or extracted features.
+- **Dataset**: The dataset files for the task are available in `/home/data/`. Tabular tasks follow a consistent layout:
+  - `train.csv` contains the labeled training split (with an `id` column when applicable).
+  - `test_features.csv` contains the unlabeled test split; use this file to generate predictions.
+  - `sample_submission.csv` shows the exact schema you must match in your final output.
+  For molecular tasks, you may encounter SMILES strings representing chemical structures; for medical imaging tasks, you may encounter image files or extracted features.
 - **Submission**: All tasks use a task-specific submission format. You MUST produce a submission file or folder as specified in the task description at `/home/submission/`. We will only evaluate submissions found at this path; failure to submit your results at this path will result in a failed attempt. (e.g., `/home/submission/submission.csv` or `/home/submission/submission.h5ad`)
 - **Inference script**: Alongside the submission, save an `inference.py` script in the same directory. It must run as `python inference.py --input <path> --output <path>` and reproduce the predictions contained in your submission.
 - **Test set**: We use carefully constructed train/test splits for each biomedical task. The dataset you see in `/home/data/` contains the appropriate splits for evaluation. You should proceed with the task on the train/test splits available to you.
