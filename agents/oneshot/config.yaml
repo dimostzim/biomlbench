@@ -1,0 +1,10 @@
+oneshot:
+  start: oneshot/start.sh
+  dockerfile: oneshot/Dockerfile
+  kwargs_type: argparse
+  kwargs:
+    model: ${{ env.OPENROUTER_MODEL }}
+    temperature: 1.0
+  env_vars:
+    OPENAI_API_KEY: ${{ env.OPENROUTER_API_KEY }}
+    OPENAI_BASE_URL: ${{ env.OPENROUTER_BASE_URL }}
