@@ -4,8 +4,11 @@ set -euo pipefail
 eval "$(conda shell.bash hook)"
 conda activate agent
 
-# Environment checks
-ls /private 
+# Ensure expected directories exist
+mkdir -p /home/code /home/logs /home/submission
+
+# Environment checks (ignore permission issues on /private for nonroot user)
+ls /private 2>/dev/null 
 ls /home/data
 
 # Detect GPU
