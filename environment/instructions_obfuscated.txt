@@ -14,7 +14,7 @@ First, please read the instructions below which are specific to our benchmark se
   For molecular tasks, you may encounter SMILES strings representing chemical structures; for medical imaging tasks, you may encounter image files or extracted features.
 - **Submission**: All tasks use a task-specific submission format. You MUST produce the following artifacts exactly as described below:
   - `/home/submission/submission.csv` containing your final predictions that match the schema in the sample submission.
-  - `/home/submission/inference.py` (plus any required support files) that reproduces the predictions when run as `python inference.py --input <path> --output <path>`.
+  - `/home/submission/inference.py` that reproduces the predictions when run as `python inference.py --input <path> --output <path>`. The input file will not contain labels. Load any necessary files created by the training. Output a CSV with column 'target' containing a score.
   We will only evaluate artifacts placed in `/home/submission/`; failure to save both files there will result in a failed attempt.
 - **Test set**: We use carefully constructed train/test splits for each biomedical task. The dataset you see in `/home/data/` contains the appropriate splits for evaluation. You should proceed with the task on the train/test splits available to you.
 - **Biomedical dependencies**: The environment includes specialized biomedical libraries including RDKit for molecular property calculations, BioPython for sequence analysis, etc. These are available in the `agent` conda environment. If you need additional packages, you can install them with `conda install -n <env_name> -c <sources (e.g., conda-forge) <package1> <package2>`.
