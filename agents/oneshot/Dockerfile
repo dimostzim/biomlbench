@@ -10,5 +10,3 @@ COPY start.sh /home/agent/start.sh
 COPY oneshot_agent.py /home/agent/oneshot_agent.py
 
 RUN chmod +x /home/agent/start.sh
-
-ENTRYPOINT ["/home/agent/start.sh"]
