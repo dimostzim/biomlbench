@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -eo pipefail
 
 eval "$(conda shell.bash hook)"
 conda activate agent
