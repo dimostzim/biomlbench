@@ -198,6 +198,11 @@ def generate_and_run_scripts(client, model, data_dir, work_dir, run_name, temper
     if os.path.exists(predictions_file):
         subprocess.run(f"cp {predictions_file} {submission_path}", shell=True, check=True)
 
+    # Copy inference.py and environment.yaml for reproducibility
+    submission_dir = os.path.dirname(submission_path)
+    subprocess.run(f"cp {inference_path} {submission_dir}/", shell=True, check=True)
+    subprocess.run(f"cp {env_yaml_path} {submission_dir}/", shell=True, check=True)
+
     delete_conda_env(run_name=run_name)
     return 0
 
