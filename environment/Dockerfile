@@ -60,6 +60,7 @@ ARG INSTALL_HEAVY_DEPENDENCIES=true
 ENV INSTALL_HEAVY_DEPENDENCIES=${INSTALL_HEAVY_DEPENDENCIES}
 
 # Install biomedical dependencies with correct GCC version for RDKit
+RUN /opt/conda/bin/conda install -n ${CONDA_ENV_NAME} -c conda-forge libstdcxx-ng -y
 RUN /opt/conda/bin/conda install -n ${CONDA_ENV_NAME} -c conda-forge scikit-learn pandas numpy matplotlib seaborn -y
 RUN /opt/conda/bin/conda install -n ${CONDA_ENV_NAME} -c conda-forge rdkit -y
 RUN /opt/conda/bin/conda run -n ${CONDA_ENV_NAME} pip install scanpy pyarrow
