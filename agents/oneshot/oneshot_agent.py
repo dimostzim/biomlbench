@@ -145,6 +145,7 @@ def generate_and_run_scripts(client, model, data_dir, work_dir, run_name, temper
         4. For environment.yaml:
         - Create a conda environment file with all necessary packages
         - Include all libraries used in both train.py and inference.py
+        - Pin all package versions (e.g., numpy<2, pytorch=2.1.*, scikit-learn>=1.3) to ensure compatibility
 
         OUTPUT FORMAT (CRITICAL):
         Provide EXACTLY 2 Python code blocks followed by EXACTLY 1 YAML code block in this order:
