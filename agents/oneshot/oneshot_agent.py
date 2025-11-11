@@ -146,7 +146,25 @@ def generate_and_run_scripts(client, model, data_dir, work_dir, run_name, temper
         - Create a conda environment file with all necessary packages
         - Include all libraries used in both train.py and inference.py
 
-        Provide complete code for all files with headers "# train.py", "# inference.py", and "# environment.yaml".
+        OUTPUT FORMAT (CRITICAL):
+        Provide EXACTLY 2 Python code blocks followed by EXACTLY 1 YAML code block in this order:
+
+        # train.py
+        ```python
+        [train.py code here]
+        ```
+
+        # inference.py
+        ```python
+        [inference.py code here]
+        ```
+
+        # environment.yaml
+        ```yaml
+        [environment.yaml content here]
+        ```
+
+        Do not include any other code blocks. Use exactly this format.
         """
 
     response_content = get_llm_response(client, model, prompt, temperature)
