@@ -194,9 +194,6 @@ def generate_and_run_scripts(client, model, data_dir, work_dir, run_name, temper
         delete_conda_env(run_name=run_name)
         return 1
 
-    # Copy inference.py and environment.yaml for reproducibility
-    subprocess.run(f"cp {inference_path} {submission_dir}/", shell=True, check=True)
-    subprocess.run(f"cp {env_yaml_path} {submission_dir}/", shell=True, check=True)
 
     delete_conda_env(run_name=run_name)
     return 0
@@ -205,7 +202,6 @@ def generate_and_run_scripts(client, model, data_dir, work_dir, run_name, temper
 def main():
     args = parse_args()
 
-    # Setup OpenAI client
     client = OpenAI(
         base_url=os.getenv("OPENAI_BASE_URL"),
         api_key=os.getenv("OPENAI_API_KEY")
@@ -215,10 +211,9 @@ def main():
     data_dir = args.data_dir
     submission_dir = args.submission_dir
     submission_path = os.path.join(submission_dir, "submission.csv")
-    work_dir = os.path.join(args.code_dir, "oneshot_workspace")
+    work_dir = submission_dir  # Use submission dir as workspace so all files end up there
     test_features_path = os.path.join(data_dir, "test_features.csv")
 
-    # Use simple run name
     run_name = "oneshot"
 
     # Generate and run scripts
