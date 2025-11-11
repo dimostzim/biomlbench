@@ -103,7 +103,7 @@ def execute_agent(container: Container, agent: Agent, logger: logging.Logger):
     exit_code, output = container.exec_run(cmd, stream=True, user="nonroot")
 
     for chunk in output:
-        logger.info(f"[Container] {chunk.decode('utf-8').strip()}")
+        logger.info(f"[Container] {chunk.decode('utf-8', errors='replace').strip()}")
 
 
 def clean_up(container: Container, logger: logging.Logger, retain: bool = False) -> bool:
