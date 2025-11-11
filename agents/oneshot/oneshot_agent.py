@@ -140,8 +140,7 @@ def generate_and_run_scripts(client, model, data_dir, work_dir, run_name, temper
 
         3. For inference.py:
         - Accept arguments: --input and --output
-        - Load model using: model_path = Path(__file__).parent / "model.pkl"
-        - Always ensure the model is loaded from the same directory as inference.py
+        - Load the model from: {submission_dir}/model.pkl
         - Output a CSV with column 'target' containing a score from 0 to 1
 
         4. For environment.yaml:
