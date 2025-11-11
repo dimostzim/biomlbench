@@ -117,7 +117,7 @@ def generate_and_run_scripts(client, model, data_dir, work_dir, run_name, temper
     prompt = f"""
         Create the best possible classifier that will generalize to new unseen data.
         You are using a linux system.
-        You have access to both CPU and GPU resources.
+        You have access to both CPU and GPU resources (1 cuda device).
 
         DATASET:
         - Training file: {train_csv_path}
@@ -136,6 +136,7 @@ def generate_and_run_scripts(client, model, data_dir, work_dir, run_name, temper
         - Train a robust model suitable for the given dataset
         - Save the trained model to: {submission_dir}/model.pkl using joblib or pickle
         - Save all model artifacts to {submission_dir}/
+        - Split the train file to train and validation to optimize during training.
 
         3. For inference.py:
         - Accept arguments: --input and --output
