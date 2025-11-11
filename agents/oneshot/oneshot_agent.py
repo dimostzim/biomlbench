@@ -74,10 +74,10 @@ def save_scripts(train_script, inference_script, env_yaml, output_dir, run_name)
 
     return train_path, inference_path, env_yaml_path
 
-def run_script(script_path, script_type, output_dir, run_name, test_csv_no_labels_path=None):
+def run_script(script_path, script_type, output_path, run_name, test_csv_no_labels_path=None):
     """Run script - same as original"""
     if script_type == 'inference':
-        cmd = f"source activate {run_name}_env && python {script_path} --input {test_csv_no_labels_path} --output {output_dir}/eval_predictions.csv"
+        cmd = f"source activate {run_name}_env && python {script_path} --input {test_csv_no_labels_path} --output {output_path}"
     if script_type == 'train':
         cmd = f"source activate {run_name}_env && python {script_path}"
 
@@ -92,7 +92,7 @@ def delete_conda_env(run_name):
     env_name = run_name + '_env'
     subprocess.run(f"conda env remove -n {env_name} -y", shell=True, check=True)
 
-def generate_and_run_scripts(client, model, data_dir, work_dir, run_name, temperature, test_features_path, submission_path):
+def generate_and_run_scripts(client, model, data_dir, work_dir, run_name, temperature, test_features_path, submission_path, submission_dir):
     """Main function - adapted from original"""
 
     # Load dataset description
@@ -134,11 +134,12 @@ def generate_and_run_scripts(client, model, data_dir, work_dir, run_name, temper
 
         2. For train.py:
         - Train a robust model suitable for the given dataset
-        - Save the trained model to: {work_dir}/model.pkl using joblib or pickle
+        - Save the trained model to: {submission_dir}/model.pkl using joblib or pickle
+        - Save all model artifacts to {submission_dir}/
 
         3. For inference.py:
         - Accept arguments: --input and --output
-        - Load the model from: {work_dir}/model.pkl
+        - Load the model from: {submission_dir}/model.pkl
         - Output a CSV with column 'target' containing a score from 0 to 1
 
         4. For environment.yaml:
@@ -174,7 +175,7 @@ def generate_and_run_scripts(client, model, data_dir, work_dir, run_name, temper
     error_code = run_script(
         script_path=train_path,
         script_type='train',
-        output_dir=work_dir,
+        output_path=None,
         run_name=run_name
     )
     if error_code != 0:
@@ -185,7 +186,7 @@ def generate_and_run_scripts(client, model, data_dir, work_dir, run_name, temper
     error_code = run_script(
         script_path=inference_path,
         script_type='inference',
-        output_dir=work_dir,
+        output_path=submission_path,
         run_name=run_name,
         test_csv_no_labels_path=test_features_path
     )
@@ -193,13 +194,7 @@ def generate_and_run_scripts(client, model, data_dir, work_dir, run_name, temper
         delete_conda_env(run_name=run_name)
         return 1
 
-    # Copy predictions to submission directory
-    predictions_file = os.path.join(work_dir, "eval_predictions.csv")
-    if os.path.exists(predictions_file):
-        subprocess.run(f"cp {predictions_file} {submission_path}", shell=True, check=True)
-
     # Copy inference.py and environment.yaml for reproducibility
-    submission_dir = os.path.dirname(submission_path)
     subprocess.run(f"cp {inference_path} {submission_dir}/", shell=True, check=True)
     subprocess.run(f"cp {env_yaml_path} {submission_dir}/", shell=True, check=True)
 
@@ -218,7 +213,8 @@ def main():
 
     # Paths
     data_dir = args.data_dir
-    submission_path = os.path.join(args.submission_dir, "submission.csv")
+    submission_dir = args.submission_dir
+    submission_path = os.path.join(submission_dir, "submission.csv")
     work_dir = os.path.join(args.code_dir, "oneshot_workspace")
     test_features_path = os.path.join(data_dir, "test_features.csv")
 
@@ -234,7 +230,8 @@ def main():
         run_name=run_name,
         temperature=args.temperature,
         test_features_path=test_features_path,
-        submission_path=submission_path
+        submission_path=submission_path,
+        submission_dir=submission_dir
     )
 
     if result != 0:
