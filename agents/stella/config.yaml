@@ -7,8 +7,8 @@ stella:
     max_tools: ${{ env.BMLB_STEP_LIMIT }}
     timeout_seconds: ${{ env.BMLB_TIME_LIMIT_SECS }}
     use_templates: true
-    # Note: use_templates and use_mem0 are action="store_true" flags
-    # Now enabling templates to activate STELLA's iterative workflow with critic agent
+    # Note: use_templates and use_mem0 are boolean flags (True/False)
+    # Enabling templates activates STELLA's iterative workflow with critic agent
   env_vars:
     TIME_LIMIT_SECS: ${{ env.BMLB_TIME_LIMIT_SECS }}
     STEP_LIMIT: ${{ env.BMLB_STEP_LIMIT }}

@@ -24,9 +24,9 @@ from stella_core import *
 def main():
     parser = argparse.ArgumentParser(description="STELLA agent for BioMLBench")
     parser.add_argument("--model", type=str, default="claude-sonnet-4")
-    # FIX: Use action="store_true" for booleans, not type=bool
-    parser.add_argument("--use_templates", action="store_true")
-    parser.add_argument("--use_mem0", action="store_true") 
+    # FIX: BioMLBench passes boolean values, so use type=bool instead of action="store_true"
+    parser.add_argument("--use_templates", type=lambda x: x.lower() in ('true', '1', 'yes'), default=False)
+    parser.add_argument("--use_mem0", type=lambda x: x.lower() in ('true', '1', 'yes'), default=False)
     parser.add_argument("--max_tools", type=int, default=30)
     parser.add_argument("--timeout_seconds", type=int, default=21600)
     
