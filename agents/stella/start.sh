@@ -6,6 +6,9 @@ cd ${AGENT_DIR}
 eval "$(conda shell.bash hook)" # make conda available to the shell
 conda activate agent
 
+# allow smolagents interpreter to handle heavier scripts before aborting
+export SMOL_MAX_OPERATIONS=${SMOL_MAX_OPERATIONS:-100000000000}
+
 # determine hardware available
 if command -v nvidia-smi &> /dev/null && nvidia-smi --query-gpu=name --format=csv,noheader &> /dev/null; then
   HARDWARE=$(nvidia-smi --query-gpu=name --format=csv,noheader \
