@@ -4,7 +4,7 @@ stella:
   kwargs_type: argparse
   kwargs:
     model: ${{ env.OPENROUTER_MODEL }}
-    max_tools: ${{ env.BMLB_STEP_LIMIT }}
+    max_tools: 60
     timeout_seconds: ${{ env.BMLB_TIME_LIMIT_SECS }}
     use_templates: true
     # Note: use_templates and use_mem0 are boolean flags (True/False)
