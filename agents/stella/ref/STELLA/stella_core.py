@@ -1937,8 +1937,8 @@ def main():
             # 渲染自定义模板，提供必要的模板变量
             from jinja2 import Template
             template_variables = {
-                'code_block_opening_tag': '```python',
-                'code_block_closing_tag': '```',
+                'code_block_opening_tag': '<code>',
+                'code_block_closing_tag': '</code>',
                 'custom_instructions': '',  # 可以根据需要添加自定义指令
                 'authorized_imports': ', '.join([
                     "time", "datetime", "os", "sys", "json", "csv", "pickle", "pathlib",
@@ -2152,8 +2152,8 @@ def initialize_stella(use_template=True, use_mem0=True):
         if custom_prompt_templates:
             from jinja2 import Template
             template_variables = {
-                'code_block_opening_tag': '```python',
-                'code_block_closing_tag': '```',
+                'code_block_opening_tag': '<code>',
+                'code_block_closing_tag': '</code>',
                 'custom_instructions': '',
                 'authorized_imports': ', '.join([
                     "time", "datetime", "os", "sys", "json", "csv", "pickle", "pathlib",
