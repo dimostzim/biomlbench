@@ -51,10 +51,10 @@ def main():
     if base_url:
         print(f"Base URL: {base_url}")
 
-    # Read task description
-    task_description_path = "/home/data/description.md"
-    with open(task_description_path, 'r') as f:
-        task_description = f.read()
+    # Read full instructions (includes benchmark instructions + agent notes + task description)
+    instructions_path = os.path.join(os.path.dirname(__file__), "instructions.txt")
+    with open(instructions_path, 'r') as f:
+        full_instructions = f.read()
 
     # Initialize the agent with data path and LLM configuration
     agent = A1(
@@ -76,16 +76,17 @@ def main():
     else:
         print("Running BioMNI in single-shot mode (self-critic disabled)")
 
+    # Combine high-level guidance with detailed instructions
     prompt = f"""
-    Build a machine learning model to solve this biomedical task. Focus on understanding the dataset structure, 
-    implementing appropriate data preprocessing, selecting suitable algorithms for the task type, 
-    and optimizing performance. Use appropriate evaluation metrics for the task type.
+Build a machine learning model to solve this biomedical task.
+Focus on understanding the dataset structure, implementing appropriate data preprocessing,
+selecting suitable algorithms for the task type, and optimizing performance.
+Use appropriate evaluation metrics for the task type.
 
-    Task description and data are available in /home/data/. 
-    Save your final predictions to /home/submission/submission.csv (or appropriate format based on sample submission).
+Full instructions below:
 
-    {task_description}
-    """
+{full_instructions}
+"""
 
     # Run the agent
     agent.go(prompt)
