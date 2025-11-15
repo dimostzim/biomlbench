@@ -1,6 +1,22 @@
 #!/bin/bash
 set -euo pipefail  # Exit on error, undefined vars, pipe failures
 
+# Parse arguments first
+FORCE_REBUILD=false
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --force)
+            FORCE_REBUILD=true
+            shift
+            ;;
+        *)
+            echo "❌ Unknown argument: $1"
+            echo "Usage: $0 [--force]"
+            exit 1
+            ;;
+    esac
+done
+
 echo "🧬 Building BioML-bench Base Environment"
 echo "======================================="
 
@@ -43,6 +59,9 @@ for file in "${required_files[@]}"; do
 done
 
 echo -e "${YELLOW}🔨 Building biomlbench-env Docker image...${NC}"
+if [[ "$FORCE_REBUILD" == "true" ]]; then
+    echo -e "${YELLOW}🔄 Force rebuild enabled (--no-cache)${NC}"
+fi
 echo "This may take several minutes as it installs biomedical dependencies."
 echo ""
 
@@ -60,6 +79,11 @@ if [ -n "$http_proxy" ]; then
 fi
 if [ -n "$https_proxy" ]; then
     BUILD_ARGS="$BUILD_ARGS --build-arg https_proxy=$https_proxy"
+fi
+
+# Add --no-cache if force rebuild is enabled
+if [[ "$FORCE_REBUILD" == "true" ]]; then
+    BUILD_ARGS="$BUILD_ARGS --no-cache"
 fi
 
 if docker build --platform=linux/amd64 -t biomlbench-env -f environment/Dockerfile $BUILD_ARGS .; then
