@@ -81,11 +81,22 @@ if ! docker info &> /dev/null; then
     exit 1
 fi
 
-# Check if biomlbench-env base image exists
-if ! docker images biomlbench-env | grep -q biomlbench-env; then
-    echo -e "${RED}❌ Base image 'biomlbench-env' not found${NC}"
+# Check if biomlbench-env base image exists (must be locally built, not pulled)
+if ! docker images biomlbench-env:latest | grep -q biomlbench-env; then
+    echo -e "${RED}❌ Base image 'biomlbench-env:latest' not found${NC}"
     echo "Please build the base environment first:"
     echo "  ./scripts/build_base_env.sh"
+    exit 1
+fi
+
+# Verify base image is locally built, not pulled from Docker Hub
+# Check if image has millerh1 RepoDigest (indicates it was pulled)
+BASE_IMAGE_DIGEST=$(docker inspect biomlbench-env:latest 2>/dev/null | grep -o 'millerh1/biomlbench-env@sha256:[^"]*' || echo "")
+if [[ -n "$BASE_IMAGE_DIGEST" ]]; then
+    echo -e "${RED}❌ Base image 'biomlbench-env:latest' appears to be pulled from Docker Hub${NC}"
+    echo "This image has a millerh1 RepoDigest, indicating it was pulled, not built locally."
+    echo "Please rebuild the base environment:"
+    echo "  ./scripts/build_base_env.sh --force"
     exit 1
 fi
 
@@ -140,9 +151,12 @@ fi
 echo -e "${YELLOW}🔨 Building agent Docker image...${NC}"
 
 # Build the agent Docker image
-# Don't use --pull flag - Docker defaults to using local images if they exist
-# This ensures we only use locally built images, not pulled ones
-BUILD_CMD="docker build --platform=linux/amd64 -t $AGENT_ID $AGENT_DIR/ \
+# Use docker buildx build WITHOUT --pull flag
+# Default behavior: use local images if they exist, but will pull if they don't
+# Since we verified biomlbench-env:latest exists above (and is locally built),
+# Docker won't pull it. If it doesn't exist, build will fail (as intended)
+# --load flag loads the image into local Docker daemon
+BUILD_CMD="docker buildx build --platform=linux/amd64 --load -t $AGENT_ID $AGENT_DIR/ \
     --build-arg SUBMISSION_DIR=/home/submission \
     --build-arg LOGS_DIR=/home/logs \
     --build-arg CODE_DIR=/home/code \

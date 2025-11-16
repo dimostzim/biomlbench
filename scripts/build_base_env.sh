@@ -86,9 +86,12 @@ if [[ "$FORCE_REBUILD" == "true" ]]; then
     BUILD_ARGS="$BUILD_ARGS --no-cache"
 fi
 
-# Don't use --pull flag - Docker defaults to using local images if they exist
-# This ensures we only use locally built images, not pulled ones
-if docker build --platform=linux/amd64 -t biomlbench-env -f environment/Dockerfile $BUILD_ARGS .; then
+# Use docker buildx build WITHOUT --pull flag
+# Default behavior: use local images if they exist, but will pull if they don't
+# ubuntu:22.04 is a standard base image - Docker will pull it automatically if needed
+# This is fine - we only prevent pulling custom millerh1/* images
+# --load flag loads the image into local Docker daemon
+if docker buildx build --platform=linux/amd64 --load -t biomlbench-env -f environment/Dockerfile $BUILD_ARGS .; then
     echo ""
     echo -e "${GREEN}✅ Successfully built biomlbench-env image${NC}"
 else
