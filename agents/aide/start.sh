@@ -41,8 +41,19 @@ if [ "$OBFUSCATE" = "true" ]; then
   mv /home/instructions_obfuscated.txt /home/instructions.txt
 fi
 
-# start a new file to store the full instructions, starting with general instructions
-cp /home/instructions.txt ${AGENT_DIR}/full_instructions.txt
+# start a new file to store the full instructions, starting with prompt wrapper (same as BioMNI/STELLA)
+cat > ${AGENT_DIR}/full_instructions.txt << 'PROMPT_WRAPPER'
+Build a machine learning model to solve this genomic task.
+Focus on understanding the dataset structure, implementing appropriate data preprocessing,
+selecting suitable algorithms for the task type, and optimizing performance.
+Use appropriate evaluation metrics for the task type.
+
+Full instructions below:
+
+PROMPT_WRAPPER
+
+# append general instructions
+cat /home/instructions.txt >> ${AGENT_DIR}/full_instructions.txt
 
 # add agent-specific instructions with a linebreak in between
 echo "" >> ${AGENT_DIR}/full_instructions.txt
@@ -66,7 +77,7 @@ mkdir -p ${AGENT_DIR}/logs
 mkdir -p ${AGENT_DIR}/workspaces
 
 # Create a goal description from the task description
-GOAL="Build a machine learning model to solve this biomedical task. Focus on understanding the dataset structure, implementing appropriate data preprocessing, selecting suitable algorithms for the task type, and optimizing performance. Full instructions can be found in the instructions.txt file."
+GOAL="Build a machine learning model to solve this genomic task. Focus on understanding the dataset structure, implementing appropriate data preprocessing, selecting suitable algorithms for the task type, and optimizing performance. Full instructions can be found in the instructions.txt file."
 
 # Create evaluation description based on task type
 EVAL="Use appropriate evaluation metrics for the task type. See the instructions.txt file for more details."
