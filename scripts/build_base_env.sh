@@ -86,7 +86,9 @@ if [[ "$FORCE_REBUILD" == "true" ]]; then
     BUILD_ARGS="$BUILD_ARGS --no-cache"
 fi
 
-if docker build --platform=linux/amd64 --pull=never -t biomlbench-env -f environment/Dockerfile $BUILD_ARGS .; then
+# Don't use --pull flag - Docker defaults to using local images if they exist
+# This ensures we only use locally built images, not pulled ones
+if docker build --platform=linux/amd64 -t biomlbench-env -f environment/Dockerfile $BUILD_ARGS .; then
     echo ""
     echo -e "${GREEN}✅ Successfully built biomlbench-env image${NC}"
 else

@@ -140,9 +140,9 @@ fi
 echo -e "${YELLOW}🔨 Building agent Docker image...${NC}"
 
 # Build the agent Docker image
-# Use --pull=never to prevent Docker from pulling images if local tags don't exist
-# This ensures we only use locally built images
-BUILD_CMD="docker build --platform=linux/amd64 --pull=never -t $AGENT_ID $AGENT_DIR/ \
+# Don't use --pull flag - Docker defaults to using local images if they exist
+# This ensures we only use locally built images, not pulled ones
+BUILD_CMD="docker build --platform=linux/amd64 -t $AGENT_ID $AGENT_DIR/ \
     --build-arg SUBMISSION_DIR=/home/submission \
     --build-arg LOGS_DIR=/home/logs \
     --build-arg CODE_DIR=/home/code \
