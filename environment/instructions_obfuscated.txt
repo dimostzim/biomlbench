@@ -1,27 +1,27 @@
-You are participating in *BioML-bench*, a benchmark for evaluating machine learning agents on biomedical tasks including drug discovery, protein engineering, single cell omics, medical imaging, and clinical biomarkers.
+You are participating in a benchmark for evaluating machine learning agents on genomic and regulatory genomics tasks. These tasks involve DNA sequence analysis, regulatory element prediction (such as enhancers and open chromatin regions), and sequence-based classification of genomic features.
 
-You will be given a biomedical machine learning task. You must solve the task by training a model and running the model on the test set to produce a submission file. You may not hand-label the data to produce a submission file.
+You will be given a genomic machine learning task. You must solve the task by training a model and running the model on the test set to produce a submission file. You may not hand-label the data to produce a submission file.
 
 BENCHMARK INSTRUCTIONS
 ------
 First, please read the instructions below which are specific to our benchmark setup. Note, these instructions can be found again in `/home/instructions.txt`.
 
-- **Task-specific instructions**: The specific instructions for the biomedical task are available in `/home/data/description.md` (will also be in this message). Read this file to understand the problem setup for the task you are currently solving.
-- **Dataset**: The dataset files for the task are available in `/home/data/`. Tabular tasks follow a consistent layout:
-  - `train.csv` contains the labeled training split (with an `id` column when applicable).
-  - `test_features.csv` contains the unlabeled test split; use this file to generate predictions.
+- **Task-specific instructions**: The specific instructions for the genomic task are available in `/home/data/description.md` (will also be in this message). Read this file to understand the problem setup for the task you are currently solving.
+- **Dataset**: The dataset files for the task are available in `/home/data/`. Genomic sequence tasks follow a consistent layout:
+  - `train.csv` contains the labeled training split with DNA sequences and their labels (with an `id` column when applicable).
+  - `test_features.csv` contains the unlabeled test split with DNA sequences; use this file to generate predictions.
   - `sample_submission.csv` shows the exact schema you must match in your final output.
-  For molecular tasks, you may encounter SMILES strings representing chemical structures; for medical imaging tasks, you may encounter image files or extracted features.
+  Tasks involve DNA sequences (typically hundreds to thousands of base pairs) and binary or multi-class classification of regulatory elements or genomic features.
 - **Submission**: All tasks use a task-specific submission format. You MUST produce the following artifacts exactly as described below:
   - `/home/submission/submission.csv` containing your final predictions that match the schema in the sample submission.
   - `/home/submission/inference.py` that reproduces the predictions when run as `python inference.py --input <path> --output <path>`. The input file will not contain labels. Load any necessary files created by the training. Output a CSV with column 'target' containing a score.
   - `/home/submission/environment.yaml` that contains all the necessary conda packages needed to run `/home/submission/inference.py`.
   We will only evaluate artifacts placed in `/home/submission/`; failure to save both files there will result in a failed attempt.
-- **Test set**: We use carefully constructed train/test splits for each biomedical task. The dataset you see in `/home/data/` contains the appropriate splits for evaluation. You should proceed with the task on the train/test splits available to you.
-- **Biomedical dependencies**: The environment includes specialized biomedical libraries including RDKit for molecular property calculations, BioPython for sequence analysis, etc. These are available in the `agent` conda environment. If you need additional packages, you can install them with `conda install -n <env_name> -c <sources (e.g., conda-forge) <package1> <package2>`.
+- **Test set**: We use carefully constructed train/test splits for each genomic task. The dataset you see in `/home/data/` contains the appropriate splits for evaluation. You should proceed with the task on the train/test splits available to you.
+- **Genomic dependencies**: The environment includes specialized libraries for sequence analysis including BioPython for sequence manipulation, and standard machine learning libraries. These are available in the `agent` conda environment. If you need additional packages, you can install them with `conda install -n <env_name> -c <sources (e.g., conda-forge) <package1> <package2>`.
 - **Submission checker**: We provide a tool for checking the validity of your submission file, in the form of a server endpoint at `http://localhost:5000/validate`. If you post a submission file to the server (e.g. `curl -X POST -F "file=@${SUBMISSION_FILE}" ${SERVER_URL}`), you will receive a response message telling you if your submission is valid or not (note that this does NOT give you a score). For your convenience, we provide a script `/home/validate_submission.sh` which can help you make this submission to the validation server.
-- **Ethics**: You are not allowed to view others' solutions to this task. Biomedical AI requires responsible development practices. Your models should be developed ethically and your submission should represent your own work.
+- **Ethics**: You are not allowed to view others' solutions to this task. Genomic AI requires responsible development practices. Your models should be developed ethically and your submission should represent your own work.
 
-Your submission will be graded based on biomedical-appropriate metrics as specified in the task instructions. Your goal is to achieve the best score possible on the biomedical task.
+Your submission will be graded based on genomic task-appropriate metrics as specified in the task instructions. Your goal is to achieve the best score possible on the genomic task.
 
-Wherever there is a conflict between the points above and the task-specific instructions in `/home/data/description.md`, the above points should always take priority since these are always true for our BioML-bench setup.
+Wherever there is a conflict between the points above and the task-specific instructions in `/home/data/description.md`, the above points should always take priority since these are always true for our benchmark setup.
