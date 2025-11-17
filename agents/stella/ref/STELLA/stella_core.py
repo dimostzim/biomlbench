@@ -1931,6 +1931,10 @@ def main():
     print(f"📋 Available tools: {len(manager_tool_management)}")
     print(f"🤖 Managed agents: dev_agent={type(dev_agent)}, critic_agent={type(critic_agent)}, tool_creation_agent={type(tool_creation_agent)}")
     
+    # Read max_operations from environment variable (default: 100 billion)
+    max_operations = int(os.getenv('SMOL_MAX_OPERATIONS', 100000000000))
+    print(f"⚙️  CodeAgent max_operations: {max_operations:,}")
+    
     try:
         # 为自定义模板提供Jinja模板变量支持
         if custom_prompt_templates:
@@ -1978,6 +1982,7 @@ def main():
             manager_agent = CodeAgent(
                 tools=manager_tool_management,  # 使用完整的工具管理权限
                 model=grok_model,
+                max_operations=max_operations,
                 managed_agents=[dev_agent, critic_agent, tool_creation_agent],
                 additional_authorized_imports=[
                     # Basic Python modules
@@ -2029,6 +2034,7 @@ def main():
             manager_agent = CodeAgent(
                 tools=manager_tool_management,  
                 model=grok_model,
+                max_operations=max_operations,
                 managed_agents=[dev_agent, critic_agent, tool_creation_agent],
                 additional_authorized_imports=[
                     "time", "datetime", "os", "sys", "json", "csv", "pickle", "pathlib",
@@ -2054,6 +2060,7 @@ def main():
         manager_agent = CodeAgent(
             tools=manager_tool_management,
             model=grok_model,
+            max_operations=max_operations,
             managed_agents=[dev_agent, critic_agent, tool_creation_agent],
             name="manager_agent",
             description="Basic manager agent"
@@ -2102,6 +2109,7 @@ def main():
         manager_agent = CodeAgent(
             tools=manager_tool_management[:3],  # Use only first 3 tools to avoid issues
             model=grok_model,
+            max_operations=max_operations,
             managed_agents=[dev_agent],  # Minimal agents
             name="emergency_manager",
             description="Emergency fallback manager agent"
@@ -2146,6 +2154,10 @@ def initialize_stella(use_template=True, use_mem0=True):
     # Create the manager agent
     print("🚀 Creating manager agent with custom prompts...")
     print(f"📋 Available tools: {len(manager_tool_management)}")
+    
+    # Read max_operations from environment variable (default: 100 billion)
+    max_operations = int(os.getenv('SMOL_MAX_OPERATIONS', 100000000000))
+    print(f"⚙️  CodeAgent max_operations: {max_operations:,}")
     
     try:
         # 为自定义模板提供Jinja模板变量支持（initialize_stella版本）
@@ -2192,6 +2204,7 @@ def initialize_stella(use_template=True, use_mem0=True):
             manager_agent = CodeAgent(
                 tools=manager_tool_management,
                 model=grok_model,
+                max_operations=max_operations,
                 managed_agents=[dev_agent, critic_agent, tool_creation_agent],
                 additional_authorized_imports=[
                     "time", "datetime", "os", "sys", "json", "csv", "pickle", "pathlib",
@@ -2236,6 +2249,7 @@ def initialize_stella(use_template=True, use_mem0=True):
             manager_agent = CodeAgent(
                 tools=manager_tool_management,
                 model=grok_model,
+                max_operations=max_operations,
                 managed_agents=[dev_agent, critic_agent, tool_creation_agent],
                 additional_authorized_imports=[
                     "time", "datetime", "os", "sys", "json", "csv", "pickle", "pathlib",
