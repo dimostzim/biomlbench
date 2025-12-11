@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """
-1-Shot LLM Agent for BioMLBench
+Zero-Shot LLM Agent for BioMLBench
 
-Adapted from src/competitors/1-shot_llm/1-shot_llm_run.py on main branch
 """
 
 import os
@@ -15,7 +14,7 @@ from pathlib import Path
 from openai import OpenAI
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="1-shot LLM agent")
+    parser = argparse.ArgumentParser(description="Zero-shot LLM agent")
     parser.add_argument('--data-dir', required=True, help="Path to /home/data")
     parser.add_argument('--submission-dir', required=True, help="Path to /home/submission")
     parser.add_argument('--code-dir', required=True, help="Path to /home/code")
@@ -234,7 +233,7 @@ def main():
     work_dir = submission_dir  # Use submission dir as workspace so all files end up there
     test_features_path = os.path.join(data_dir, "test_features.csv")
 
-    run_name = "oneshot"
+    run_name = "zeroshot"
 
     # Generate and run scripts
     result = generate_and_run_scripts(
@@ -250,10 +249,10 @@ def main():
     )
 
     if result != 0:
-        print("1-shot agent failed")
+        print("Zero-shot agent failed")
         sys.exit(1)
 
-    print("✓ 1-shot agent completed successfully!")
+    print("✓ Zero-shot agent completed successfully!")
 
 if __name__ == "__main__":
     main()

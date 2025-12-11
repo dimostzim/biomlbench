@@ -20,6 +20,6 @@ RUN conda run -n agent pip install openai python-dotenv
 
 # Copy agent files
 COPY start.sh ${AGENT_DIR}/start.sh
-COPY oneshot_agent.py ${AGENT_DIR}/oneshot_agent.py
+COPY zeroshot_agent.py ${AGENT_DIR}/zeroshot_agent.py
 
 RUN chmod +x ${AGENT_DIR}/start.sh

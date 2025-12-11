@@ -1,6 +1,6 @@
-oneshot:
-  start: oneshot/start.sh
-  dockerfile: oneshot/Dockerfile
+zeroshot:
+  start: zeroshot/start.sh
+  dockerfile: zeroshot/Dockerfile
   kwargs_type: argparse
   kwargs:
     model: ${{ env.OPENROUTER_MODEL }}

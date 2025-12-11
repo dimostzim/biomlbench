@@ -21,8 +21,8 @@ else
 fi
 export HARDWARE
 
-# Run the 1-shot agent
-python "${AGENT_DIR}/oneshot_agent.py" \
+# Run the zero-shot agent
+python "${AGENT_DIR}/zeroshot_agent.py" \
     --data-dir "${DATA_DIR}" \
     --submission-dir "${SUBMISSION_DIR}" \
     --code-dir "${CODE_DIR}" \
